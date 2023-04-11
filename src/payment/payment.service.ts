@@ -86,9 +86,11 @@ export class PaymentService {
       ]);
 
       return {
-        balance: paymentResult.balance,
-        payment: amount,
-        paymentMethod: 'balance',
+        wallet: {
+          balance: paymentResult.balance,
+          payment: amount,
+          paymentMethod: 'balance',
+        },
         transactionResult,
       };
     } catch (error) {
@@ -129,9 +131,11 @@ export class PaymentService {
       ]);
 
       return {
-        balance: peymentResult.balance,
-        payment: amount,
-        paymentMethod: 'balance',
+        creditcard: {
+          balance: peymentResult.balance,
+          payment: amount,
+          paymentMethod: 'balance',
+        },
         transactionResult,
       };
     } catch (error) {

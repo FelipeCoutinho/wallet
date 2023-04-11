@@ -1,6 +1,8 @@
-version: '3.1'
+version: '3.8'
 services:
   app-wallet:
+    depends_on:
+      - database
     container_name: app-wallet
     restart: always
     build:
@@ -12,12 +14,14 @@ services:
       - .:/app
     environment:
       - NODE_ENV=production
-
+      - DATABASE_URL=postgres://postgres_xmeq_user:7jQMbSsbNrvAVtJQIMG631QSNPmT55mt@dpg-cgf43pseoogqfc3bb3i0-a.ohio-postgres.render.com/postgres_xmeq
   database:
     image: postgres
     container_name: dbwallet
+    restart: always
     environment:
       - POSTGRES_USER=walletteste
       - POSTGRES_PASSWORD=123
+      - POSTGRES_DB=postgres
     ports:
       - '5432:5432'

@@ -45,8 +45,8 @@ export class ChargebackService {
     walletId: number,
   ) {
     try {
-      wallet.balance += amount;
       const previousBalance = wallet.balance;
+      wallet.balance += amount;
       const [chargebackResult, transactionResult] = await Promise.all([
         this.walletRepository.chargeback(walletId, wallet.balance),
 
@@ -59,12 +59,16 @@ export class ChargebackService {
         ),
       ]);
 
-      return {
-        balance: chargebackResult.balance,
-        chargeback: amount,
-        paymentMethod: 'balance',
-        transactionResult,
-      };
+      return [
+        {
+          wallet: {
+            balance: chargebackResult.balance,
+            chargeback: amount,
+            paymentMethod: 'balance',
+          },
+          transactionResult,
+        },
+      ];
     } catch (error) {
       return new BadRequestException(error);
     }
@@ -72,10 +76,14 @@ export class ChargebackService {
 
   async chargebackCreditCard(creditcard, amount: number, walletId: number) {
     try {
-      creditcard.balance += amount;
       const previousBalance = creditcard.balance;
+      creditcard.balance += amount;
       const [chargebackResult, transactionResult] = await Promise.all([
-        this.creditCardRepository.chargeback(walletId, creditcard.balance),
+        this.creditCardRepository.chargeback(
+          creditcard.credcardId,
+          creditcard.balance,
+        ),
+
         this.transaction(
           walletId,
           amount,
@@ -85,12 +93,16 @@ export class ChargebackService {
         ),
       ]);
 
-      return {
-        balance: chargebackResult.balance,
-        chargeback: amount,
-        paymentMethod: 'balance',
-        transactionResult,
-      };
+      return [
+        {
+          creditcard: {
+            balance: chargebackResult.balance,
+            chargeback: amount,
+            paymentMethod: 'balance',
+          },
+          transactionResult,
+        },
+      ];
     } catch (error) {
       return new BadRequestException(error);
     }

@@ -11,7 +11,7 @@ node_modules
 test
 
 # Environment (contains sensitive data)
-.env
+
 
 # Files not required for production
 .editorconfig
